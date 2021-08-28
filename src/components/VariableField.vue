@@ -2,7 +2,7 @@
   <div>
     <el-input
       size="mini"
-      style="width: 300px; padding: 5px;"
+      style="width: 240px; padding: 5px;"
       v-for="variable in variables" :key='variable.keyword'
       :type="(variable.type === Number) ? 'number' : 'string'"
       v-model="variable.value">
@@ -18,7 +18,6 @@ export default defineComponent({
   name: 'DataTable',
   data () {
     return {
-      dataVariables: this.count
     }
   },
   props: {
