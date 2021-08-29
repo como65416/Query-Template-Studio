@@ -98,7 +98,6 @@ export default defineComponent({
             [key: string]: any
           }
           const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
-          console.log(sql, datas)
 
           script.result.titles = []
           script.result.datas = []
