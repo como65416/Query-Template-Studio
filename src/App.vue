@@ -100,7 +100,7 @@ export default defineComponent({
           const [rows] = await conn.execute(sql)
 
           interface RowData {
-            [key: string]: any
+            [key: string]: number | string | null
           }
           const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
 
