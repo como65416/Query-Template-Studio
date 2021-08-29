@@ -3,7 +3,7 @@ import { VariableData } from '@/types'
 class SqlUtil {
   static generateBindedSQL (sql: string, variables: VariableData[]): string {
     for (const v of variables) {
-      if (v.value === null) {
+      if (v.value === null || v.value === undefined) {
         continue
       }
 
