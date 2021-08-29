@@ -15,8 +15,8 @@
           >Query</el-button>
         </p>
         <QueryCard
-          v-for="script in config.scripts"
-          :script="script"
+          v-for="(script, i) in config.scripts"
+          v-model:script="config.scripts[i]"
           :variables="config.variables"
           :key="script.sql"/>
       </div>
@@ -87,6 +87,10 @@ export default defineComponent({
 
         const config = this.scriptConfigs[0]
         for (const script of config.scripts) {
+          if (!script.enable) {
+            continue
+          }
+
           const sql = SqlUtil.generateBindedSQL(script.sql, config.variables)
           const [rows] = await conn.execute(sql)
 
@@ -94,6 +98,7 @@ export default defineComponent({
             [key: string]: any
           }
           const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
+          console.log(sql, datas)
 
           script.result.titles = []
           script.result.datas = []

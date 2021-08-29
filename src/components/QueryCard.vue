@@ -1,10 +1,15 @@
 <template>
   <el-card>
     <template #header>
-      {{ script.name }}
+      <el-checkbox v-model="scriptConfig.enable">{{ scriptConfig.name }}</el-checkbox>
     </template>
-    <pre>{{ generateBindedSQL(script.sql, variables) }}</pre>
-    <DataTable :titles="script.result.titles" :data="script.result.datas"/>
+    <div>
+      <pre>{{ generateBindedSQL(scriptConfig.sql, variables) }}</pre>
+      <DataTable
+        v-show="scriptConfig.enable"
+        :titles="scriptConfig.result.titles"
+        :data="scriptConfig.result.datas"/>
+    </div>
   </el-card>
 </template>
 
@@ -18,10 +23,19 @@ export default defineComponent({
   name: 'QueryCard',
   data () {
     return {
+      scriptConfig: Object.assign({}, this.script)
     }
   },
   components: {
     DataTable
+  },
+  watch: {
+    scriptConfig: {
+      handler: function () {
+        this.$emit('update:script', this.scriptConfig)
+      },
+      deep: true
+    }
   },
   props: {
     variables: {

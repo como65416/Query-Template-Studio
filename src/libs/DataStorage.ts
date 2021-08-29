@@ -35,7 +35,7 @@ class DataStorage {
             keyword: '$name',
             name: '姓名',
             type: String,
-            value: 'Bob'
+            value: 'Bob.'
           }
         ],
         scripts: [
@@ -45,7 +45,8 @@ class DataStorage {
             result: {
               titles: [],
               datas: []
-            }
+            },
+            enable: true
           },
           {
             name: '查詢指定名字',
@@ -53,7 +54,8 @@ class DataStorage {
             result: {
               titles: [],
               datas: []
-            }
+            },
+            enable: false
           }
         ]
       }
