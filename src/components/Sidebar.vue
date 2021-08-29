@@ -12,25 +12,9 @@
           <i class="el-icon-folder"></i>
           <span>查詢會員資料</span>
         </template>
-        <el-menu-item index="1-3">选项3</el-menu-item>
+        <el-menu-item index="1-3">選項 1</el-menu-item>
       </el-submenu>
     </el-menu>
-    <div class="floating-buttons">
-      <el-button
-        type="success"
-        icon="el-icon-folder-add"
-        size="medium"
-        @click="handleCreateFolderClick"
-        circle>
-      </el-button>
-      <el-button
-        type="primary"
-        icon="el-icon-document-add"
-        size="medium"
-        @click="handleCreateScriptClick"
-        circle>
-      </el-button>
-    </div>
   </div>
 </template>
 
@@ -44,12 +28,6 @@ export default defineComponent({
   methods: {
     handleSelect (key :string, keyPath :string) {
       this.$emit('onOptionClick', key, keyPath)
-    },
-    handleCreateFolderClick () {
-      this.$emit('onCreateFolderClick')
-    },
-    handleCreateScriptClick () {
-      this.$emit('onCreateScriptClick')
     }
   }
 })

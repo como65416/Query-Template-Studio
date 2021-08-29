@@ -1,11 +1,7 @@
 <template>
   <el-container style="height: 100%;">
     <el-aside width="240px">
-      <Sidebar
-        @onOptionClick="optionClicked"
-        @onCreateFolderClick="openCreateFolderModel"
-        @onCreateScriptClick="onenCreateScriptModel"
-      />
+      <Sidebar @onOptionClick="optionClicked"/>
     </el-aside>
     <el-main>
       <div v-for='config in scriptConfigs' :key='config.id'>
@@ -25,74 +21,60 @@
       </div>
     </el-main>
   </el-container>
+  <SettingButton
+    @onCreateFolderClick="openCreateFolderDialog"
+    @onCreateScriptClick="openCreateScriptDialog"
+    @onSettingClick="openSettingDialog"/>
+  <SettingDialog
+    v-model:visible="settingDialogVisable"
+    v-model:databaseConfig="databaseConfig"/>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { Sidebar, VariableField, QueryCard } from '@/components'
-import { ScriptConfig } from '@/types'
+import { DataStorage } from '@/libs'
+import { Sidebar, VariableField, QueryCard, SettingButton, SettingDialog } from '@/components'
+import { ScriptConfig, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
-  scriptConfigs: ScriptConfig[]
+  scriptConfigs: ScriptConfig[],
+  settingDialogVisable: boolean,
+  databaseConfig: DatabaseConfig,
 }
 
 export default defineComponent({
   name: 'App',
   data (): BaseComponentData {
     return {
-      scriptConfigs: [
-        {
-          id: 1,
-          variables: [
-            {
-              keyword: '$age',
-              name: '年齡',
-              type: Number,
-              value: null
-            },
-            {
-              keyword: '$name',
-              name: '姓名',
-              type: String,
-              value: null
-            }
-          ],
-          scripts: [
-            {
-              name: '查詢年齡',
-              sql: 'SELECT * FROM Student WHERE age = $age',
-              result: {
-                titles: [],
-                datas: []
-              }
-            },
-            {
-              name: '查詢指定名字',
-              sql: 'SELECT * FROM Student WHERE name = $name',
-              result: {
-                titles: [],
-                datas: []
-              }
-            }
-          ]
-        }
-      ]
+      scriptConfigs: DataStorage.getScriptConfigs(),
+      databaseConfig: DataStorage.getDatabaseConfig(),
+      settingDialogVisable: false
     }
   },
   components: {
     QueryCard,
     Sidebar,
-    VariableField
+    VariableField,
+    SettingButton,
+    SettingDialog
   },
   methods: {
     optionClicked (key :string, keyPath :string) {
       console.log('parent', key, keyPath)
     },
-    openCreateFolderModel () {
+    openCreateFolderDialog () {
       console.log('...')
     },
-    onenCreateScriptModel () {
+    openCreateScriptDialog () {
       console.log('...')
+    },
+    openSettingDialog () {
+      this.settingDialogVisable = true
+    }
+  },
+  watch: {
+    databaseConfig () {
+      DataStorage.saveDatabaseConfig(this.databaseConfig)
     }
   }
 })
