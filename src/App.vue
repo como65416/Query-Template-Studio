@@ -75,24 +75,25 @@ export default defineComponent({
       this.settingDialogVisable = true
     },
     async querySQLs () {
-      const conn = await mysql.createConnection({
-        host: this.databaseConfig.host,
-        user: this.databaseConfig.username,
-        password: this.databaseConfig.password,
-        database: this.databaseConfig.database,
-        port: this.databaseConfig.port
-      })
+      let conn
+      try {
+        conn = await mysql.createConnection({
+          host: this.databaseConfig.host,
+          user: this.databaseConfig.username,
+          password: this.databaseConfig.password,
+          database: this.databaseConfig.database,
+          port: this.databaseConfig.port
+        })
 
-      const config = this.scriptConfigs[0]
-      for (const script of config.scripts) {
-        try {
+        const config = this.scriptConfigs[0]
+        for (const script of config.scripts) {
           const sql = SqlUtil.generateBindedSQL(script.sql, config.variables)
           const [rows] = await conn.execute(sql)
 
-          interface RowObj {
+          interface RowData {
             [key: string]: any
           }
-          const datas: RowObj[] = Object.values(JSON.parse(JSON.stringify(rows)))
+          const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
 
           script.result.titles = []
           script.result.datas = []
@@ -100,12 +101,14 @@ export default defineComponent({
             script.result.titles = Object.keys(datas[0])
             script.result.datas = datas
           }
-        } catch (e) {
-          ElMessage.error(e.toString())
+        }
+      } catch (e) {
+        ElMessage.error(e.toString())
+      } finally {
+        if (conn !== undefined) {
+          conn.end()
         }
       }
-
-      await conn.end()
     }
   },
   watch: {
