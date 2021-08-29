@@ -9,7 +9,8 @@ class DataStorage {
       host: 'localhost',
       username: 'username',
       password: 'password',
-      port: 3306
+      port: 3306,
+      database: 'database'
     }
 
     return store.get(databaseConfigKey) ?? defaultConfig
@@ -38,7 +39,7 @@ class DataStorage {
         scripts: [
           {
             name: '查詢年齡',
-            sql: 'SELECT * FROM Student WHERE age = $age',
+            sql: 'SELECT * FROM students WHERE age = $age',
             result: {
               titles: [],
               datas: []
@@ -46,7 +47,7 @@ class DataStorage {
           },
           {
             name: '查詢指定名字',
-            sql: 'SELECT * FROM Student WHERE name = $name',
+            sql: 'SELECT * FROM students WHERE name = $name',
             result: {
               titles: [],
               datas: []

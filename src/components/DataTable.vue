@@ -7,7 +7,6 @@
     <el-table-column
       v-for="title in titles"
       :key="title"
-      :width="150"
       :prop="title"
       :label="title">
       <template v-slot="scope">

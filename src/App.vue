@@ -11,6 +11,7 @@
             type="success"
             size="mini"
             icon="el-icon-search"
+            @click="querySQLs"
           >Query</el-button>
         </p>
         <QueryCard
@@ -31,8 +32,10 @@
 </template>
 
 <script lang="ts">
+import { ElMessage } from 'element-plus'
+import mysql from 'mysql2/promise'
 import { defineComponent } from 'vue'
-import { DataStorage } from '@/libs'
+import { DataStorage, SqlUtil } from '@/libs'
 import { Sidebar, VariableField, QueryCard, SettingButton, SettingDialog } from '@/components'
 import { ScriptConfig, DatabaseConfig } from '@/types'
 
@@ -70,6 +73,39 @@ export default defineComponent({
     },
     openSettingDialog () {
       this.settingDialogVisable = true
+    },
+    async querySQLs () {
+      const conn = await mysql.createConnection({
+        host: this.databaseConfig.host,
+        user: this.databaseConfig.username,
+        password: this.databaseConfig.password,
+        database: this.databaseConfig.database,
+        port: this.databaseConfig.port
+      })
+
+      const config = this.scriptConfigs[0]
+      for (const script of config.scripts) {
+        try {
+          const sql = SqlUtil.generateBindedSQL(script.sql, config.variables)
+          const [rows] = await conn.execute(sql)
+
+          interface RowObj {
+            [key: string]: any
+          }
+          const datas: RowObj[] = Object.values(JSON.parse(JSON.stringify(rows)))
+
+          script.result.titles = []
+          script.result.datas = []
+          if (datas.length > 0) {
+            script.result.titles = Object.keys(datas[0])
+            script.result.datas = datas
+          }
+        } catch (e) {
+          ElMessage.error(e.toString())
+        }
+      }
+
+      await conn.end()
     }
   },
   watch: {

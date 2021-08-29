@@ -13,6 +13,9 @@
       <el-form-item label="Port">
         <el-input v-model="dbConfig.port" autocomplete="off"></el-input>
       </el-form-item>
+      <el-form-item label="Database">
+        <el-input v-model="dbConfig.database" autocomplete="off"></el-input>
+      </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
