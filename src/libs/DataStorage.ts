@@ -28,12 +28,14 @@ class DataStorage {
           {
             keyword: '$age',
             name: '年齡',
-            type: Number
+            type: Number,
+            value: 20
           },
           {
             keyword: '$name',
             name: '姓名',
-            type: String
+            type: String,
+            value: 'Bob'
           }
         ],
         scripts: [
