@@ -1,7 +1,7 @@
 declare interface VariableData {
   keyword: string,
   name: string,
-  type: any,
+  type: string,
   value?: number | string,
 }
 

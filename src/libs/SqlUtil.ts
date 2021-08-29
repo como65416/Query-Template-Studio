@@ -7,9 +7,9 @@ class SqlUtil {
         continue
       }
 
-      if (v.type === Number) {
+      if (v.type === 'Number') {
         sql = sql.replace(v.keyword, String(v.value))
-      } else if (v.type === String) {
+      } else if (v.type === 'String') {
         sql = sql.replace(v.keyword, JSON.stringify(v.value))
       }
     }

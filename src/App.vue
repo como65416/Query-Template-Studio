@@ -4,8 +4,8 @@
       <Sidebar @onOptionClick="optionClicked"/>
     </el-aside>
     <el-main>
-      <div v-for='config in scriptConfigs' :key='config.id'>
-        <VariableField v-model:variables="config.variables" />
+      <div>
+        <VariableField v-model:variables="scriptConfig.variables" />
         <p style="text-align:center;">
           <el-button
             type="success"
@@ -16,9 +16,9 @@
           >Query</el-button>
         </p>
         <QueryCard
-          v-for="(script, i) in config.scripts"
-          v-model:script="config.scripts[i]"
-          :variables="config.variables"
+          v-for="(script, i) in scriptConfig.scripts"
+          v-model:script="scriptConfig.scripts[i]"
+          :variables="scriptConfig.variables"
           :key="script.sql"/>
       </div>
     </el-main>
@@ -41,7 +41,7 @@ import { Sidebar, VariableField, QueryCard, SettingButton, SettingDialog } from 
 import { ScriptConfig, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
-  scriptConfigs: ScriptConfig[],
+  scriptConfig: ScriptConfig,
   settingDialogVisable: boolean,
   databaseConfig: DatabaseConfig,
   isQuerying: boolean
@@ -51,7 +51,7 @@ export default defineComponent({
   name: 'App',
   data (): BaseComponentData {
     return {
-      scriptConfigs: DataStorage.getScriptConfigs(),
+      scriptConfig: DataStorage.getScriptConfig(),
       databaseConfig: DataStorage.getDatabaseConfig(),
       settingDialogVisable: false,
       isQuerying: false
@@ -89,13 +89,14 @@ export default defineComponent({
           port: this.databaseConfig.port
         })
 
-        const config = this.scriptConfigs[0]
-        for (const script of config.scripts) {
+        for (const script of this.scriptConfig.scripts) {
+          script.result.titles = []
+          script.result.datas = []
           if (!script.enable) {
             continue
           }
 
-          const sql = SqlUtil.generateBindedSQL(script.sql, config.variables)
+          const sql = SqlUtil.generateBindedSQL(script.sql, this.scriptConfig.variables)
           const [rows] = await conn.execute(sql)
 
           interface RowData {
@@ -103,8 +104,6 @@ export default defineComponent({
           }
           const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
 
-          script.result.titles = []
-          script.result.datas = []
           if (datas.length > 0) {
             script.result.titles = Object.keys(datas[0])
             script.result.datas = datas
