@@ -11,6 +11,7 @@
             type="success"
             size="mini"
             icon="el-icon-search"
+            :loading="isQuerying"
             @click="querySQLs"
           >Query</el-button>
         </p>
@@ -43,6 +44,7 @@ declare interface BaseComponentData {
   scriptConfigs: ScriptConfig[],
   settingDialogVisable: boolean,
   databaseConfig: DatabaseConfig,
+  isQuerying: boolean
 }
 
 export default defineComponent({
@@ -51,7 +53,8 @@ export default defineComponent({
     return {
       scriptConfigs: DataStorage.getScriptConfigs(),
       databaseConfig: DataStorage.getDatabaseConfig(),
-      settingDialogVisable: false
+      settingDialogVisable: false,
+      isQuerying: false
     }
   },
   components: {
@@ -75,6 +78,7 @@ export default defineComponent({
       this.settingDialogVisable = true
     },
     async querySQLs () {
+      this.isQuerying = true
       let conn
       try {
         conn = await mysql.createConnection({
@@ -113,6 +117,7 @@ export default defineComponent({
           conn.end()
         }
       }
+      this.isQuerying = false
     }
   },
   watch: {

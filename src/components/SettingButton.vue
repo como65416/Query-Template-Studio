@@ -7,6 +7,7 @@
       circle>
     </el-button>
 
+    <!--
     <el-button
       v-show="isExpanded"
       type="success"
@@ -23,6 +24,7 @@
       @click="handleCreateScriptClick"
       circle>
     </el-button>
+    -->
     <el-button
       v-show="isExpanded"
       type="warning"
