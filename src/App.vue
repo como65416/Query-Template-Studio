@@ -12,8 +12,6 @@
     </el-main>
   </el-container>
   <SettingButton
-    @onCreateFolderClick="openCreateFolderDialog"
-    @onCreateScriptClick="openCreateScriptDialog"
     @onSettingClick="openSettingDialog"/>
   <SettingDialog
     v-model:visible="settingDialogVisable"
@@ -55,12 +53,6 @@ export default defineComponent({
   methods: {
     onScriptSetSelect (scriptSet :ScriptSet) {
       this.seletedScriptSet = scriptSet
-    },
-    openCreateFolderDialog () {
-      console.log('...')
-    },
-    openCreateScriptDialog () {
-      console.log('...')
     },
     openSettingDialog () {
       this.settingDialogVisable = true

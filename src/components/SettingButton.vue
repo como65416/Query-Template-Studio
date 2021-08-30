@@ -6,25 +6,6 @@
       @click="isExpanded = !isExpanded"
       circle>
     </el-button>
-
-    <!--
-    <el-button
-      v-show="isExpanded"
-      type="success"
-      icon="el-icon-folder-add"
-      size="medium"
-      @click="handleCreateFolderClick"
-      circle>
-    </el-button>
-    <el-button
-      v-show="isExpanded"
-      type="primary"
-      icon="el-icon-document-add"
-      size="medium"
-      @click="handleCreateScriptClick"
-      circle>
-    </el-button>
-    -->
     <el-button
       v-show="isExpanded"
       type="warning"
@@ -49,12 +30,6 @@ export default defineComponent({
   props: {
   },
   methods: {
-    handleCreateFolderClick () {
-      this.$emit('onCreateFolderClick')
-    },
-    handleCreateScriptClick () {
-      this.$emit('onCreateScriptClick')
-    },
     handleSettingClick () {
       this.$emit('onSettingClick')
     }
