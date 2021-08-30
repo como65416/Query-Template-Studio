@@ -1,4 +1,4 @@
-import { DatabaseConfig, ScriptConfig } from '@/types'
+import { DatabaseConfig, ScriptSet } from '@/types'
 import store from 'store'
 import os from 'os'
 import fs from 'fs'
@@ -23,7 +23,7 @@ class DataStorage {
     store.set(databaseConfigKey, config)
   }
 
-  static getScriptConfig (): ScriptConfig {
+  static getScriptSets (): ScriptSet[] {
     const homePath = os.homedir()
     const filename = '.quick-query-tool.json'
     const fullpath = path.join(homePath, filename)
@@ -33,43 +33,84 @@ class DataStorage {
       return config
     }
 
-    return {
-      id: 1,
-      variables: [
-        {
-          keyword: '$age',
-          name: '年齡',
-          type: 'Number',
-          value: 20
-        },
-        {
-          keyword: '$name',
-          name: '姓名',
-          type: 'String',
-          value: 'Bob.'
-        }
-      ],
-      scripts: [
-        {
-          name: '查詢年齡',
-          sql: 'SELECT * FROM students WHERE age = $age',
-          result: {
-            titles: [],
-            datas: []
+    return [
+      {
+        id: '51g1v1qcwadasdsa',
+        name: '查詢學生資料',
+        variables: [
+          {
+            keyword: '$age',
+            name: '年齡',
+            type: 'Number',
+            value: 20
           },
-          enable: true
-        },
-        {
-          name: '查詢指定名字',
-          sql: 'SELECT * FROM students WHERE name = $name',
-          result: {
-            titles: [],
-            datas: []
+          {
+            keyword: '$name',
+            name: '姓名',
+            type: 'String',
+            value: 'Bob.'
+          }
+        ],
+        scripts: [
+          {
+            name: '查詢年齡',
+            sql: 'SELECT * FROM students WHERE age = $age',
+            result: {
+              titles: [],
+              datas: []
+            },
+            enable: true
           },
-          enable: false
-        }
-      ]
-    }
+          {
+            name: '查詢指定名字',
+            sql: 'SELECT * FROM students WHERE name = $name',
+            result: {
+              titles: [],
+              datas: []
+            },
+            enable: false
+          }
+        ]
+      },
+      {
+        id: 'fda34g4gqAfadsadfd',
+        name: '查詢老師資料',
+        variables: [
+          {
+            keyword: '$age',
+            name: '年齡',
+            type: 'Number',
+            value: 20
+          },
+          {
+            keyword: '$name',
+            name: '姓名',
+            type: 'String',
+            value: 'Bob.'
+          }
+        ],
+        scripts: [
+          {
+            name: '查詢年齡',
+            sql: 'SELECT * FROM teacher WHERE age = $age',
+            result: {
+              titles: [],
+              datas: []
+            },
+            enable: true
+          },
+          {
+            name: '查詢指定名字',
+            sql: 'SELECT * FROM teacher WHERE name = $name',
+            result: {
+              titles: [],
+              datas: []
+            },
+            enable: false
+          }
+        ]
+      }
+    ]
   }
 }
 

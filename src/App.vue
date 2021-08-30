@@ -4,23 +4,9 @@
       <Sidebar @onOptionClick="optionClicked"/>
     </el-aside>
     <el-main>
-      <div>
-        <VariableField v-model:variables="scriptConfig.variables" />
-        <p style="text-align:center;">
-          <el-button
-            type="success"
-            size="mini"
-            icon="el-icon-search"
-            :loading="isQuerying"
-            @click="querySQLs"
-          >Query</el-button>
-        </p>
-        <QueryCard
-          v-for="(script, i) in scriptConfig.scripts"
-          v-model:script="scriptConfig.scripts[i]"
-          :variables="scriptConfig.variables"
-          :key="script.sql"/>
-      </div>
+      <ScriptSetPanel
+        :scriptSet="seletedScriptSet"
+        :databaseConfig="databaseConfig"/>
     </el-main>
   </el-container>
   <SettingButton
@@ -37,32 +23,34 @@ import { ElMessage } from 'element-plus'
 import mysql from 'mysql2/promise'
 import { defineComponent } from 'vue'
 import { DataStorage, SqlUtil } from '@/libs'
-import { Sidebar, VariableField, QueryCard, SettingButton, SettingDialog } from '@/components'
-import { ScriptConfig, DatabaseConfig } from '@/types'
+import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel } from '@/components'
+import { ScriptSet, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
-  scriptConfig: ScriptConfig,
+  scriptSets: ScriptSet[],
   settingDialogVisable: boolean,
   databaseConfig: DatabaseConfig,
-  isQuerying: boolean
+  isQuerying: boolean,
+  seletedScriptSet: ScriptSet
 }
 
 export default defineComponent({
   name: 'App',
   data (): BaseComponentData {
+    const sets = DataStorage.getScriptSets()
     return {
-      scriptConfig: DataStorage.getScriptConfig(),
+      scriptSets: DataStorage.getScriptSets(),
       databaseConfig: DataStorage.getDatabaseConfig(),
       settingDialogVisable: false,
-      isQuerying: false
+      isQuerying: false,
+      seletedScriptSet: sets[0]
     }
   },
   components: {
-    QueryCard,
     Sidebar,
-    VariableField,
     SettingButton,
-    SettingDialog
+    SettingDialog,
+    ScriptSetPanel
   },
   methods: {
     optionClicked (key :string, keyPath :string) {
@@ -89,14 +77,14 @@ export default defineComponent({
           port: this.databaseConfig.port
         })
 
-        for (const script of this.scriptConfig.scripts) {
+        for (const script of this.seletedScriptSet.scripts) {
           script.result.titles = []
           script.result.datas = []
           if (!script.enable) {
             continue
           }
 
-          const sql = SqlUtil.generateBindedSQL(script.sql, this.scriptConfig.variables)
+          const sql = SqlUtil.generateBindedSQL(script.sql, this.seletedScriptSet.variables)
           const [rows] = await conn.execute(sql)
 
           interface RowData {
