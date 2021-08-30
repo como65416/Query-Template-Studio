@@ -7,27 +7,29 @@
       background-color="#545c64"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-submenu index="1">
-        <template #title>
-          <i class="el-icon-folder"></i>
-          <span>查詢會員資料</span>
-        </template>
-        <el-menu-item index="1-3">選項 1</el-menu-item>
-      </el-submenu>
+      <el-menu-item :index="set.id" v-for="set in scriptSets" :key="set.id">
+        <i class="el-icon-folder"></i>
+        <template #title>{{ set.name }}</template>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { ScriptSet } from '@/types'
+import { PropType, defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Sidebar',
   props: {
+    scriptSets: {
+      type: Object as PropType<ScriptSet[]>,
+      required: true
+    }
   },
   methods: {
-    handleSelect (key :string, keyPath :string) {
-      this.$emit('onOptionClick', key, keyPath)
+    handleSelect (key :string) {
+      this.$emit('onScriptSetSelect', this.scriptSets.find(s => s.id === key))
     }
   }
 })

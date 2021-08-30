@@ -22,13 +22,18 @@
 import mysql from 'mysql2/promise'
 import { ElMessage } from 'element-plus'
 import { SqlUtil } from '@/libs'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { VariableField, QueryCard } from '@/components'
-import { VariableData } from '@/types'
+import { VariableData, ScriptSet } from '@/types'
+
+declare interface BaseComponentData {
+  isQuerying: boolean,
+  scriptSetData?: ScriptSet
+}
 
 export default defineComponent({
   name: 'ScriptSetPanel',
-  data () {
+  data (): BaseComponentData {
     return {
       isQuerying: false,
       scriptSetData: Object.assign({}, this.scriptSet)
@@ -39,10 +44,13 @@ export default defineComponent({
     QueryCard
   },
   watch: {
+    scriptSet: function () {
+      this.scriptSetData = this.scriptSet
+    }
   },
   props: {
     scriptSet: {
-      type: Object,
+      type: Object as PropType<ScriptSet>,
       requried: true
     },
     databaseConfig: {
@@ -52,6 +60,10 @@ export default defineComponent({
   },
   methods: {
     async querySQLs () {
+      if (this.scriptSetData === undefined) {
+        return
+      }
+
       this.isQuerying = true
       let conn
       try {

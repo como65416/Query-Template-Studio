@@ -1,7 +1,9 @@
 <template>
   <el-container style="height: 100%;">
     <el-aside width="240px">
-      <Sidebar @onOptionClick="optionClicked"/>
+      <Sidebar
+        :scriptSets="scriptSets"
+        @onScriptSetSelect="onScriptSetSelect"/>
     </el-aside>
     <el-main>
       <ScriptSetPanel
@@ -19,10 +21,8 @@
 </template>
 
 <script lang="ts">
-import { ElMessage } from 'element-plus'
-import mysql from 'mysql2/promise'
 import { defineComponent } from 'vue'
-import { DataStorage, SqlUtil } from '@/libs'
+import { DataStorage } from '@/libs'
 import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel } from '@/components'
 import { ScriptSet, DatabaseConfig } from '@/types'
 
@@ -53,8 +53,8 @@ export default defineComponent({
     ScriptSetPanel
   },
   methods: {
-    optionClicked (key :string, keyPath :string) {
-      console.log('parent', key, keyPath)
+    onScriptSetSelect (scriptSet :ScriptSet) {
+      this.seletedScriptSet = scriptSet
     },
     openCreateFolderDialog () {
       console.log('...')
@@ -64,47 +64,6 @@ export default defineComponent({
     },
     openSettingDialog () {
       this.settingDialogVisable = true
-    },
-    async querySQLs () {
-      this.isQuerying = true
-      let conn
-      try {
-        conn = await mysql.createConnection({
-          host: this.databaseConfig.host,
-          user: this.databaseConfig.username,
-          password: this.databaseConfig.password,
-          database: this.databaseConfig.database,
-          port: this.databaseConfig.port
-        })
-
-        for (const script of this.seletedScriptSet.scripts) {
-          script.result.titles = []
-          script.result.datas = []
-          if (!script.enable) {
-            continue
-          }
-
-          const sql = SqlUtil.generateBindedSQL(script.sql, this.seletedScriptSet.variables)
-          const [rows] = await conn.execute(sql)
-
-          interface RowData {
-            [key: string]: number | string | null
-          }
-          const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
-
-          if (datas.length > 0) {
-            script.result.titles = Object.keys(datas[0])
-            script.result.datas = datas
-          }
-        }
-      } catch (e) {
-        ElMessage.error(e.toString())
-      } finally {
-        if (conn !== undefined) {
-          conn.end()
-        }
-      }
-      this.isQuerying = false
     }
   },
   watch: {
