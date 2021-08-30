@@ -1,7 +1,8 @@
 import { VariableData, ScriptData } from '@/types/index'
 
 declare interface ScriptSet {
-  id: number
+  id: string
+  name: string
   variables: VariableData[],
   scripts: ScriptData[],
 }

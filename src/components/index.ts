@@ -4,6 +4,7 @@ import VariableField from './VariableField.vue'
 import QueryCard from './QueryCard.vue'
 import SettingButton from './SettingButton.vue'
 import SettingDialog from './SettingDialog.vue'
+import ScriptSetPanel from './ScriptSetPanel.vue'
 
 export {
   DataTable,
@@ -11,5 +12,6 @@ export {
   VariableField,
   QueryCard,
   SettingButton,
-  SettingDialog
+  SettingDialog,
+  ScriptSetPanel
 }
