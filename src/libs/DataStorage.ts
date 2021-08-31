@@ -6,6 +6,8 @@ import path from 'path'
 
 const databaseConfigKey = 'database-config'
 
+declare const __static: string
+
 class DataStorage {
   static getDatabaseConfig (): DatabaseConfig {
     const defaultConfig = {
@@ -24,93 +26,23 @@ class DataStorage {
   }
 
   static getScriptSets (): ScriptSet[] {
+    // Check home path
     const homePath = os.homedir()
-    const filename = '.quick-query-tool.json'
-    const fullpath = path.join(homePath, filename)
+    let filename = '.quick-query-tool.json'
+    let fullpath = path.join(homePath, filename)
     if (fs.existsSync(fullpath)) {
       const content = fs.readFileSync(fullpath)
       const config = JSON.parse(String(content))
       return config
     }
 
-    return [
-      {
-        id: '51g1v1qcwadasdsa',
-        name: '查詢學生資料',
-        variables: [
-          {
-            keyword: '$age',
-            name: '年齡',
-            type: 'Number',
-            value: 20
-          },
-          {
-            keyword: '$name',
-            name: '姓名',
-            type: 'String',
-            value: 'Bob.'
-          }
-        ],
-        scripts: [
-          {
-            name: '查詢年齡',
-            sql: 'SELECT * FROM students WHERE age = $age',
-            result: {
-              titles: [],
-              datas: []
-            },
-            enable: true
-          },
-          {
-            name: '查詢指定名字',
-            sql: 'SELECT * FROM students WHERE name = $name',
-            result: {
-              titles: [],
-              datas: []
-            },
-            enable: false
-          }
-        ]
-      },
-      {
-        id: 'fda34g4gqAfadsadfd',
-        name: '查詢老師資料',
-        variables: [
-          {
-            keyword: '$age',
-            name: '年齡',
-            type: 'Number',
-            value: 20
-          },
-          {
-            keyword: '$name',
-            name: '姓名',
-            type: 'String',
-            value: 'Bob.'
-          }
-        ],
-        scripts: [
-          {
-            name: '查詢年齡',
-            sql: 'SELECT * FROM teacher WHERE age = $age',
-            result: {
-              titles: [],
-              datas: []
-            },
-            enable: true
-          },
-          {
-            name: '查詢指定名字',
-            sql: 'SELECT * FROM teacher WHERE name = $name',
-            result: {
-              titles: [],
-              datas: []
-            },
-            enable: false
-          }
-        ]
-      }
-    ]
+    // If home path no config file, read example file
+    const staticPath = __static
+    filename = '.quick-query-tool.example.json'
+    fullpath = path.join(staticPath, 'statics', filename)
+    const content = fs.readFileSync(fullpath)
+
+    return JSON.parse(String(content))
   }
 }
 

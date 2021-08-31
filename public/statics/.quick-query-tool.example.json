@@ -1,0 +1,78 @@
+[
+    {
+        "id": "51g1v1qcwadasdsa",
+        "name": "查詢學生資料",
+        "variables": [
+            {
+                "keyword": "$age",
+                "name": "年齡",
+                "type": "Number",
+                "value": 20
+            },
+            {
+                "keyword": "$name",
+                "name": "姓名",
+                "type": "String",
+                "value": "Bob."
+            }
+        ],
+        "scripts": [
+            {
+                "name": "查詢年齡",
+                "sql": "SELECT * FROM students WHERE age = $age",
+                "result": {
+                    "titles": [],
+                    "datas": []
+                },
+                "enable": true
+            },
+            {
+                "name": "查詢指定名字",
+                "sql": "SELECT * FROM students WHERE name = $name",
+                "result": {
+                    "titles": [],
+                    "datas": []
+                },
+                "enable": false
+            }
+        ]
+    },
+    {
+        "id": "fda34g4gqAfadsadfd",
+        "name": "查詢老師資料",
+        "variables": [
+            {
+                "keyword": "$age",
+                "name": "年齡",
+                "type": "Number",
+                "value": 20
+            },
+            {
+                "keyword": "$name",
+                "name": "姓名",
+                "type": "String",
+                "value": "Bob."
+            }
+        ],
+        "scripts": [
+            {
+                "name": "查詢年齡",
+                "sql": "SELECT * FROM teacher WHERE age = $age",
+                "result": {
+                    "titles": [],
+                    "datas": []
+                },
+                "enable": true
+            },
+            {
+                "name": "查詢指定名字",
+                "sql": "SELECT * FROM teacher WHERE name = $name",
+                "result": {
+                    "titles": [],
+                    "datas": []
+                },
+                "enable": false
+            }
+        ]
+    }
+]
