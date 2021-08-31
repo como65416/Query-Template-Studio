@@ -1,15 +1,12 @@
 <template>
-  <el-card>
-    <template #header>
+  <el-card :body-style="{ padding: '12px 20px' }">
       <el-checkbox v-model="scriptSet.enable">{{ scriptSet.name }}</el-checkbox>
-    </template>
-    <div>
-      <pre>{{ generateBindedSQL(scriptSet.sql, variables) }}</pre>
-      <DataTable
-        v-show="scriptSet.enable"
-        :titles="scriptSet.result.titles"
-        :data="scriptSet.result.datas"/>
-    </div>
+      <div v-show="scriptSet.enable">
+        <pre>{{ generateBindedSQL(scriptSet.sql, variables) }}</pre>
+        <DataTable
+          :titles="scriptSet.result.titles"
+          :data="scriptSet.result.datas"/>
+      </div>
   </el-card>
 </template>
 
@@ -55,7 +52,7 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
+<style>
   .el-card pre {
     margin: 0px 0px 10px 0px;
   }
