@@ -1,48 +1,64 @@
 <template>
-  <el-table
-    :data="datas"
-    size="mini"
-    :header-cell-style="{background:'#F3F4F7',color:'#555'}"
-    border>
-    <el-table-column
-      v-for="title in titles"
-      :key="title"
-      :prop="title"
-      :label="title">
-      <template v-slot="scope">
-        {{ scope.row[title] }}
-        <el-tag
-          v-if="scope.row[title] === null"
-          size="mini"
-          type="info"
-          effect="plain">
-          NULL
-        </el-tag>
-      </template>
-    </el-table-column>
-  </el-table>
+  <div>
+    <ag-grid-vue style="width: 100%;"
+      class="ag-theme-balham"
+      @grid-ready="onGridReady"
+      :gridOptions="{
+        domLayout: 'autoHeight',
+        rowHeight: 26,
+        headerHeight: 26,
+        suppressSizeToFit: true
+      }"
+      rowSelection="multiple">
+    </ag-grid-vue>
+  </div>
 </template>
 
 <script lang="ts">
+import { AgGridEvent, GridApi } from 'ag-grid-community'
+import { AgGridVue } from 'ag-grid-vue3'
 import { defineComponent } from 'vue'
+
+declare interface BaseComponentData {
+  agGridAPI?: GridApi
+}
 
 export default defineComponent({
   name: 'DataTable',
+  data (): BaseComponentData {
+    return {
+    }
+  },
   props: {
     titles: {
       type: Array,
-      default: function () {
-        return []
-      }
+      default: () => []
     },
     datas: {
       type: Array,
-      default: function () {
-        return []
-      }
+      default: () => []
     }
   },
+  watch: {
+    titles () {
+      const columnDefs = this.titles.map((title: any) => ({ field: title, editable: true, resizable: true }))
+      this.agGridAPI!.setColumnDefs(columnDefs)
+      this.agGridAPI!.sizeColumnsToFit()
+    },
+    datas () {
+      this.agGridAPI!.setRowData(this.datas)
+      this.agGridAPI!.sizeColumnsToFit()
+    }
+  },
+  components: {
+    AgGridVue
+  },
   methods: {
+    onGridReady (params: AgGridEvent) {
+      this.agGridAPI = params.api
+      params.api.setColumnDefs([])
+      params.api.setRowData([])
+    }
   }
 })
 </script>

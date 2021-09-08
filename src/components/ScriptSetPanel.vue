@@ -24,7 +24,7 @@ import { ElMessage } from 'element-plus'
 import { SqlUtil } from '@/libs'
 import { defineComponent, PropType } from 'vue'
 import { VariableField, QueryCard } from '@/components'
-import { VariableData, ScriptSet } from '@/types'
+import { VariableData, ScriptSet, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
   isQuerying: boolean,
@@ -54,7 +54,7 @@ export default defineComponent({
       requried: true
     },
     databaseConfig: {
-      type: Object,
+      type: Object as PropType<DatabaseConfig>,
       required: true
     }
   },

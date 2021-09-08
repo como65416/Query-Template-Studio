@@ -5,7 +5,7 @@
         <pre>{{ generateBindedSQL(scriptSet.sql, variables) }}</pre>
         <DataTable
           :titles="scriptSet.result.titles"
-          :data="scriptSet.result.datas"/>
+          :datas="scriptSet.result.datas"/>
       </div>
   </el-card>
 </template>
