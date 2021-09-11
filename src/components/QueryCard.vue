@@ -12,9 +12,9 @@
 
 <script lang="ts">
 import { SqlUtil } from '@/libs'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { DataTable } from '@/components'
-import { VariableData } from '@/types'
+import { VariableData, ScriptSet } from '@/types'
 
 export default defineComponent({
   name: 'QueryCard',
@@ -36,11 +36,11 @@ export default defineComponent({
   },
   props: {
     variables: {
-      type: Array,
+      type: Array as PropType<VariableData[]>,
       requried: true
     },
     script: {
-      type: Object,
+      type: Object as PropType<ScriptSet>,
       requried: true
     }
   },

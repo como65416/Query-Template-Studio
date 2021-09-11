@@ -17,7 +17,7 @@
 <script lang="ts">
 import { AgGridEvent, GridApi } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 declare interface BaseComponentData {
   agGridAPI?: GridApi
@@ -31,7 +31,7 @@ export default defineComponent({
   },
   props: {
     titles: {
-      type: Array,
+      type: Array as PropType<string[]>,
       default: () => []
     },
     datas: {
@@ -41,7 +41,7 @@ export default defineComponent({
   },
   watch: {
     titles () {
-      const columnDefs = this.titles.map((title: any) => ({ field: title, editable: true, resizable: true }))
+      const columnDefs = this.titles.map((title: string) => ({ field: title, editable: true, resizable: true }))
       this.agGridAPI!.setColumnDefs(columnDefs)
       this.agGridAPI!.sizeColumnsToFit()
     },
