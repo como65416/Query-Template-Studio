@@ -5,6 +5,7 @@ module.exports = {
   pluginOptions: {
     electronBuilder: {
       builderOptions: {
+        productName: 'Quick Query Util',
         win: {
           icon: 'build/icons/icon.ico'
         },
