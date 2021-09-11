@@ -7,7 +7,6 @@
         domLayout: 'autoHeight',
         rowHeight: 26,
         headerHeight: 26,
-        suppressSizeToFit: true
       }"
       rowSelection="multiple">
     </ag-grid-vue>
@@ -15,12 +14,13 @@
 </template>
 
 <script lang="ts">
-import { AgGridEvent, GridApi } from 'ag-grid-community'
+import { AgGridEvent, GridApi, ColumnApi } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import { defineComponent, PropType } from 'vue'
 
 declare interface BaseComponentData {
   agGridAPI?: GridApi
+  columnApi?: ColumnApi
 }
 
 export default defineComponent({
@@ -41,13 +41,18 @@ export default defineComponent({
   },
   watch: {
     titles () {
-      const columnDefs = this.titles.map((title: string) => ({ field: title, editable: true, resizable: true }))
+      const columnDefs = this.titles.map((title: string) => ({
+        field: title,
+        editable: true,
+        resizable: true,
+        maxWidth: 150
+      }))
       this.agGridAPI!.setColumnDefs(columnDefs)
-      this.agGridAPI!.sizeColumnsToFit()
+      this.columnApi!.autoSizeAllColumns()
     },
     datas () {
       this.agGridAPI!.setRowData(this.datas)
-      this.agGridAPI!.sizeColumnsToFit()
+      this.columnApi!.autoSizeAllColumns()
     }
   },
   components: {
@@ -55,6 +60,7 @@ export default defineComponent({
   },
   methods: {
     onGridReady (params: AgGridEvent) {
+      this.columnApi = params.columnApi
       this.agGridAPI = params.api
       params.api.setColumnDefs([])
       params.api.setRowData([])
