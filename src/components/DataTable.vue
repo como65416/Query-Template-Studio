@@ -41,20 +41,7 @@ export default defineComponent({
   },
   watch: {
     titles () {
-      const columnDefs: Array<ColGroupDef | ColDef> = this.titles
-        .map((title: string) => ({
-          field: title,
-          editable: true,
-          resizable: true,
-          maxWidth: 150,
-          cellStyle: (params: CellClassParams) => {
-            if (params.value === null) {
-              return { backgroundColor: '#dadee6' }
-            }
-            return {}
-          }
-        }))
-      this.agGridAPI!.setColumnDefs(columnDefs)
+      this.updateColumnDef()
       this.columnApi!.autoSizeAllColumns()
     },
     datas () {
@@ -71,6 +58,22 @@ export default defineComponent({
       this.agGridAPI = params.api
       params.api.setColumnDefs([])
       params.api.setRowData([])
+    },
+    updateColumnDef () {
+      const columnDefs: Array<ColGroupDef | ColDef> = this.titles
+        .map((title: string) => ({
+          field: title,
+          editable: true,
+          resizable: true,
+          maxWidth: 150,
+          cellStyle: (params: CellClassParams) => {
+            if (params.value === null) {
+              return { backgroundColor: '#dadee6' }
+            }
+            return {}
+          }
+        }))
+      this.agGridAPI!.setColumnDefs(columnDefs)
     },
     updateRenderDatas () {
       const renderDatas: any[] = []
