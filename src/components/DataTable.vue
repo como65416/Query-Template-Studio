@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { AgGridEvent, GridApi, ColumnApi } from 'ag-grid-community'
+import { AgGridEvent, GridApi, ColumnApi, ColDef, ColGroupDef, CellClassParams } from 'ag-grid-community'
 import { AgGridVue } from 'ag-grid-vue3'
 import { defineComponent, PropType } from 'vue'
 
@@ -41,12 +41,19 @@ export default defineComponent({
   },
   watch: {
     titles () {
-      const columnDefs = this.titles.map((title: string) => ({
-        field: title,
-        editable: true,
-        resizable: true,
-        maxWidth: 150
-      }))
+      const columnDefs: Array<ColGroupDef | ColDef> = this.titles
+        .map((title: string) => ({
+          field: title,
+          editable: true,
+          resizable: true,
+          maxWidth: 150,
+          cellStyle: (params: CellClassParams) => {
+            if (params.value === null) {
+              return { backgroundColor: '#dadee6' }
+            }
+            return {}
+          }
+        }))
       this.agGridAPI!.setColumnDefs(columnDefs)
       this.columnApi!.autoSizeAllColumns()
     },
