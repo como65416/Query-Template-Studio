@@ -35,7 +35,7 @@ export default defineComponent({
       default: () => []
     },
     datas: {
-      type: Array,
+      type: Array as PropType<any[]>,
       default: () => []
     }
   },
@@ -58,7 +58,7 @@ export default defineComponent({
       this.columnApi!.autoSizeAllColumns()
     },
     datas () {
-      this.agGridAPI!.setRowData(this.datas)
+      this.updateRenderDatas()
       this.columnApi!.autoSizeAllColumns()
     }
   },
@@ -71,6 +71,17 @@ export default defineComponent({
       this.agGridAPI = params.api
       params.api.setColumnDefs([])
       params.api.setRowData([])
+    },
+    updateRenderDatas () {
+      const renderDatas: any[] = []
+      for (const data of this.datas) {
+        const row: any = {}
+        for (const key in data) {
+          row[key] = (data[key] instanceof Object) ? JSON.stringify(data[key]) : data[key]
+        }
+        renderDatas.push(row)
+      }
+      this.agGridAPI!.setRowData(renderDatas)
     }
   }
 })
