@@ -41,8 +41,17 @@ class DataStorage {
     filename = '.quick-query-tool.example.json'
     fullpath = path.join(staticPath, 'statics', filename)
     const content = fs.readFileSync(fullpath)
+    const scriptSets: ScriptSet[] = JSON.parse(String(content))
+    for (const scriptSet of scriptSets) {
+      for (const index in scriptSet.scripts) {
+        scriptSet.scripts[index].result = {
+          titles: [],
+          datas: []
+        }
+      }
+    }
 
-    return JSON.parse(String(content))
+    return scriptSets
   }
 }
 
