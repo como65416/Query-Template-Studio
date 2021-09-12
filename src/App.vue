@@ -7,7 +7,10 @@
     </el-aside>
     <el-main>
       <ScriptSetPanel
-        :scriptSet="seletedScriptSet"
+        v-bind:key="scriptSet.id"
+        v-for="(scriptSet, index) in createdScriptSets"
+        v-show="selectedScriptIndex == index"
+        :scriptSet="scriptSet"
         :databaseConfig="databaseConfig"/>
     </el-main>
   </el-container>
@@ -19,6 +22,7 @@
 </template>
 
 <script lang="ts">
+import _ from 'lodash'
 import { defineComponent } from 'vue'
 import { DataStorage } from '@/libs'
 import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel } from '@/components'
@@ -29,19 +33,20 @@ declare interface BaseComponentData {
   settingDialogVisable: boolean,
   databaseConfig: DatabaseConfig,
   isQuerying: boolean,
-  seletedScriptSet: ScriptSet
+  createdScriptSets: ScriptSet[],
+  selectedScriptIndex: number,
 }
 
 export default defineComponent({
   name: 'App',
   data (): BaseComponentData {
-    const sets = DataStorage.getScriptSets()
     return {
       scriptSets: DataStorage.getScriptSets(),
       databaseConfig: DataStorage.getDatabaseConfig(),
       settingDialogVisable: false,
       isQuerying: false,
-      seletedScriptSet: sets[0]
+      createdScriptSets: [],
+      selectedScriptIndex: -1
     }
   },
   components: {
@@ -51,8 +56,15 @@ export default defineComponent({
     ScriptSetPanel
   },
   methods: {
-    onScriptSetSelect (scriptSet :ScriptSet) {
-      this.seletedScriptSet = scriptSet
+    onScriptSetSelect (scriptSet: ScriptSet) {
+      const index = this.createdScriptSets.findIndex((set: ScriptSet) => set.id === scriptSet.id)
+      if (index === -1) {
+        const newScriptSet = _.cloneDeep(scriptSet)
+        this.createdScriptSets.push(newScriptSet)
+        this.selectedScriptIndex = this.createdScriptSets.length - 1
+      } else {
+        this.selectedScriptIndex = index
+      }
     },
     openSettingDialog () {
       this.settingDialogVisable = true
