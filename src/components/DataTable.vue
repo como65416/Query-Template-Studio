@@ -67,10 +67,11 @@ export default defineComponent({
           resizable: true,
           maxWidth: 150,
           cellStyle: (params: CellClassParams) => {
+            const style: {[key : string]: string} = { borderRight: '1px solid #ddd' }
             if (params.value === null) {
-              return { backgroundColor: '#dadee6' }
+              style.backgroundColor = '#dadee6'
             }
-            return {}
+            return style
           }
         }))
       this.agGridAPI!.setColumnDefs(columnDefs)
