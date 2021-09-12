@@ -17,6 +17,7 @@
     "ag-grid-vue3": "^26.0.0",
     "core-js": "^3.6.5",
     "element-plus": "^1.0.2-beta.46",
+    "lodash": "^4.17.21",
     "mysql2": "^2.3.0",
     "store": "^2.0.12",
     "vue": "^3.2.6",
