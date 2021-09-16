@@ -72,7 +72,8 @@ export default defineComponent({
           user: this.databaseConfig.username,
           password: this.databaseConfig.password,
           database: this.databaseConfig.database,
-          port: this.databaseConfig.port
+          port: this.databaseConfig.port,
+          dateStrings: true
         })
 
         for (const script of this.scriptSetData.scripts) {
