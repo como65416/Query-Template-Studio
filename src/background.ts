@@ -1,8 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import path from 'path'
+import { app, protocol, BrowserWindow, session } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+
+declare const __static: string
+
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -61,6 +65,14 @@ app.on('ready', async () => {
       console.error('Vue Devtools failed to install:', e.toString())
     }
   }
+
+  session.defaultSession.protocol.registerFileProtocol('static', (request, callback) => {
+    const fileUrl = request.url.replace('static://', '')
+    const filePath = path.join(__static, fileUrl)
+    console.log(filePath)
+    callback(filePath)
+  })
+
   createWindow()
 })
 
