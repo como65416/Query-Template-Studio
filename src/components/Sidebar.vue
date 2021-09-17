@@ -8,7 +8,7 @@
       text-color="#fff"
       active-text-color="#ffd04b">
       <el-menu-item :index="set.id" v-for="set in scriptSets" :key="set.id">
-        <i class="el-icon-folder"></i>
+        <img src="static://statics/icons/sql_database.png" style="width: 25px; padding: 5px;"/>
         <template #title>{{ set.name }}</template>
       </el-menu-item>
     </el-menu>
