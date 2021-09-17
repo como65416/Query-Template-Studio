@@ -1,12 +1,19 @@
 <template>
   <div>
-    <ag-grid-vue style="width: 100%;"
+    <ag-grid-vue style="width: 100%; max-height: 320px; overflow: auto;"
       class="ag-theme-balham"
       @grid-ready="onGridReady"
       :gridOptions="{
         domLayout: 'autoHeight',
         rowHeight: 26,
         headerHeight: 26,
+        defaultColDef: {
+          editable: true,
+          sortable: true,
+          filter: true,
+          maxWidth: 150,
+          resizable: true,
+        },
       }"
       rowSelection="multiple">
     </ag-grid-vue>
@@ -63,9 +70,6 @@ export default defineComponent({
       const columnDefs: Array<ColGroupDef | ColDef> = this.titles
         .map((title: string) => ({
           field: title,
-          editable: true,
-          resizable: true,
-          maxWidth: 150,
           cellStyle: (params: CellClassParams) => {
             const style: {[key : string]: string} = { borderRight: '1px solid #ddd' }
             if (params.value === null) {
