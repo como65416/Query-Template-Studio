@@ -15,22 +15,28 @@
     </el-main>
   </el-container>
   <SettingButton
-    @onSettingClick="openSettingDialog"/>
+    @onSettingClick="openSettingDialog"
+    @onScriptEditorClick="openScriptEditorDialog"/>
   <SettingDialog
     v-model:visible="settingDialogVisable"
     v-model:databaseConfig="databaseConfig"/>
+  <EditorDialog
+    @scriptSetsUpdated="onScriptSetsUpdated"
+    v-model:visible="scriptEditorVisable"
+    v-model:scriptSets="scriptSets"/>
 </template>
 
 <script lang="ts">
 import _ from 'lodash'
 import { defineComponent } from 'vue'
 import { DataStorage } from '@/libs'
-import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel } from '@/components'
+import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel, EditorDialog } from '@/components'
 import { ScriptSet, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
   scriptSets: ScriptSet[],
   settingDialogVisable: boolean,
+  scriptEditorVisable: boolean,
   databaseConfig: DatabaseConfig,
   isQuerying: boolean,
   createdScriptSets: ScriptSet[],
@@ -44,6 +50,7 @@ export default defineComponent({
       scriptSets: DataStorage.getScriptSets(),
       databaseConfig: DataStorage.getDatabaseConfig(),
       settingDialogVisable: false,
+      scriptEditorVisable: false,
       isQuerying: false,
       createdScriptSets: [],
       selectedScriptIndex: -1
@@ -53,7 +60,8 @@ export default defineComponent({
     Sidebar,
     SettingButton,
     SettingDialog,
-    ScriptSetPanel
+    ScriptSetPanel,
+    EditorDialog
   },
   methods: {
     onScriptSetSelect (scriptSet: ScriptSet) {
@@ -68,6 +76,14 @@ export default defineComponent({
     },
     openSettingDialog () {
       this.settingDialogVisable = true
+    },
+    openScriptEditorDialog () {
+      this.scriptEditorVisable = true
+    },
+    onScriptSetsUpdated (newScriptSets: ScriptSet[]) {
+      this.scriptSets = _.cloneDeep(newScriptSets)
+      this.createdScriptSets = []
+      DataStorage.saveScriptSets(newScriptSets)
     }
   },
   watch: {
