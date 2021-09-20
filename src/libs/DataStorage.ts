@@ -25,21 +25,25 @@ class DataStorage {
     store.set(databaseConfigKey, config)
   }
 
+  static saveScriptSets (scriptSets: ScriptSet[]) {
+    const defaultSavePath = this.getDefaultSavePath()
+    const content = JSON.stringify(scriptSets, null, 4)
+    fs.writeFileSync(defaultSavePath, content)
+  }
+
   static getScriptSets (): ScriptSet[] {
     // Check home path
-    const homePath = os.homedir()
-    let filename = '.quick-query-tool.json'
-    let fullpath = path.join(homePath, filename)
-    if (fs.existsSync(fullpath)) {
-      const content = fs.readFileSync(fullpath)
+    const defaultSavePath = this.getDefaultSavePath()
+    if (fs.existsSync(defaultSavePath)) {
+      const content = fs.readFileSync(defaultSavePath)
       const config = JSON.parse(String(content))
       return config
     }
 
     // If home path no config file, read example file
     const staticPath = __static
-    filename = '.quick-query-tool.example.json'
-    fullpath = path.join(staticPath, 'statics', filename)
+    const filename = '.quick-query-tool.example.json'
+    const fullpath = path.join(staticPath, 'statics', filename)
     const content = fs.readFileSync(fullpath)
     const scriptSets: ScriptSet[] = JSON.parse(String(content))
     for (const scriptSet of scriptSets) {
@@ -52,6 +56,14 @@ class DataStorage {
     }
 
     return scriptSets
+  }
+
+  static getDefaultSavePath (): string {
+    const homePath = os.homedir()
+    const filename = '.quick-query-tool.json'
+    const fullpath = path.join(homePath, filename)
+
+    return fullpath
   }
 }
 
