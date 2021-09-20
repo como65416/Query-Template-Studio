@@ -8,6 +8,14 @@
     </el-button>
     <el-button
       v-show="isExpanded"
+      type="success"
+      icon="el-icon-edit"
+      size="medium"
+      @click="handleScriptEditorClick"
+      circle>
+    </el-button>
+    <el-button
+      v-show="isExpanded"
       type="warning"
       icon="el-icon-setting"
       size="medium"
@@ -32,6 +40,9 @@ export default defineComponent({
   methods: {
     handleSettingClick () {
       this.$emit('onSettingClick')
+    },
+    handleScriptEditorClick () {
+      this.$emit('onScriptEditorClick')
     }
   }
 })
