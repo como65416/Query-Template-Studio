@@ -69,7 +69,6 @@ app.on('ready', async () => {
   session.defaultSession.protocol.registerFileProtocol('static', (request, callback) => {
     const fileUrl = request.url.replace('static://', '')
     const filePath = path.join(__static, fileUrl)
-    console.log(filePath)
     callback(filePath)
   })
 
