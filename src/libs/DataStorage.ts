@@ -42,7 +42,7 @@ class DataStorage {
 
     // If home path no config file, read example file
     const staticPath = __static
-    const filename = '.quick-query-tool.example.json'
+    const filename = '.query-template-studio.scripts-example.json'
     const fullpath = path.join(staticPath, 'statics', filename)
     const content = fs.readFileSync(fullpath)
     const scriptSets: ScriptSet[] = JSON.parse(String(content))
@@ -60,7 +60,7 @@ class DataStorage {
 
   static getDefaultSavePath (): string {
     const homePath = os.homedir()
-    const filename = '.quick-query-tool.json'
+    const filename = '.query-template-studio.scripts.json'
     const fullpath = path.join(homePath, filename)
 
     return fullpath

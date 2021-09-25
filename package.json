@@ -1,6 +1,6 @@
 {
-  "name": "quick-query-tool",
-  "version": "0.1.0",
+  "name": "query-template-studio",
+  "version": "0.1.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
