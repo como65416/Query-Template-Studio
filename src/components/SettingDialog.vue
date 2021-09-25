@@ -8,7 +8,7 @@
         <el-input v-model="dbConfig.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="Password">
-        <el-input v-model="dbConfig.password" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.password" type="password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="Port">
         <el-input v-model="dbConfig.port" autocomplete="off"></el-input>
