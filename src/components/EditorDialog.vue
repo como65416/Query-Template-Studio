@@ -14,11 +14,19 @@
           ></el-option>
         </el-select>
         <el-button
-          class="create-set-btn"
+          class="set-btn"
           size="mini"
           type="success"
           icon="el-icon-plus"
           @click="openAddScriptSetDialog"
+          circle>
+        </el-button>
+        <el-button
+          class="set-btn"
+          size="mini"
+          type="danger"
+          icon="el-icon-minus"
+          @click="removeScriptSet"
           circle>
         </el-button>
       </div>
@@ -34,11 +42,16 @@
         </el-tag>
         <el-button class="button-new-variable" size="mini" @click="openAddVariableDialog">+</el-button>
       </div>
-      <el-tabs type="border-card" @tab-click="tabsClick">
+      <el-tabs
+        type="border-card"
+        @tab-click="tabsClick"
+        @tab-remove="removeScript">
         <el-tab-pane
           v-for="script in editingScriptSets[selectedScriptSetIndex].scripts"
           :label="script.name"
-          :key="script.id">
+          :name="script.name"
+          closable
+          :key="script.name">
         </el-tab-pane>
         <el-tab-pane>
           <template #label>
@@ -244,6 +257,21 @@ export default defineComponent({
         type: this.newVariableType
       } as VariableData)
       this.addVariableVisible = false
+    },
+    removeScriptSet () {
+      const set = this.editingScriptSets[this.selectedScriptSetIndex]
+      if (confirm('Are you sure delete script set `' + set.name + '` ?')) {
+        this.editingScriptSets.splice(this.selectedScriptSetIndex, 1)
+        this.selectedScriptSetIndex = 0
+      }
+    },
+    removeScript (name: string) {
+      const index = this.editingScriptSets[this.selectedScriptSetIndex].scripts.findIndex(s => s.name === name)
+      const script = this.editingScriptSets[this.selectedScriptSetIndex].scripts[index]
+      if (confirm('Are you sure delete script `' + script.name + '` script set?')) {
+        this.editingScriptSets[this.selectedScriptSetIndex].scripts.splice(index, 1)
+        this.selectedScriptSqlIndex = -1
+      }
     }
   }
 })
@@ -271,7 +299,7 @@ export default defineComponent({
     min-height: 18px;
   }
 
-  .create-set-btn {
-    margin: 5px;
+  .set-btn, .set-btn {
+    margin: 0px 0px 0px 5px;
   }
 </style>
