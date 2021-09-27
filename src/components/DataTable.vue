@@ -8,10 +8,10 @@
         rowHeight: 26,
         headerHeight: 26,
         defaultColDef: {
+          width: 120,
           editable: true,
           sortable: true,
           filter: true,
-          maxWidth: 150,
           resizable: true,
         },
       }"
@@ -49,11 +49,9 @@ export default defineComponent({
   watch: {
     titles () {
       this.updateColumnDef()
-      this.columnApi!.autoSizeAllColumns()
     },
     datas () {
       this.updateRenderDatas()
-      this.columnApi!.autoSizeAllColumns()
     }
   },
   components: {
