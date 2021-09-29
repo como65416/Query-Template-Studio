@@ -1,37 +1,55 @@
 <template>
   <el-card :body-style="{ padding: '12px 20px' }">
-      <el-checkbox v-model="scriptSet.enable">{{ scriptSet.name }}</el-checkbox>
-      <div v-show="scriptSet.enable">
-        <pre>{{ generateBindedSQL(scriptSet.sql, variables) }}</pre>
-        <DataTable
-          :titles="scriptSet.result.titles"
-          :datas="scriptSet.result.datas"/>
-      </div>
+    <el-checkbox v-model="scriptData.enable">{{ scriptData.name }}</el-checkbox>
+    <el-popover
+      placement="bottom"
+      title="SQL"
+      :width="400"
+      trigger="hover"
+    >
+      <pre>{{ renderedSql }}</pre>
+      <template #reference>
+        <img src="static://statics/icons/db_mysql_server.svg" class="show-script-icon" @click="copyToClipboard"/>
+      </template>
+    </el-popover>
+    <div v-show="scriptData.enable">
+      <DataTable
+        :titles="scriptData.result.titles"
+        :datas="scriptData.result.datas"/>
+    </div>
   </el-card>
 </template>
 
 <script lang="ts">
-import { SqlUtil } from '@/libs'
+import { Clipboard, SqlUtil } from '@/libs'
 import { defineComponent, PropType } from 'vue'
 import { DataTable } from '@/components'
-import { VariableData, ScriptSet } from '@/types'
+import { VariableData, ScriptData } from '@/types'
 
 export default defineComponent({
   name: 'QueryCard',
   data () {
     return {
-      scriptSet: Object.assign({}, this.script)
+      scriptData: Object.assign({}, this.script)
     }
   },
   components: {
     DataTable
   },
   watch: {
-    scriptSet: {
+    scriptData: {
       handler: function () {
-        this.$emit('update:script', this.scriptSet)
+        this.$emit('update:script', this.scriptData)
       },
       deep: true
+    }
+  },
+  computed: {
+    renderedSql: function (): string {
+      if (this.script == null || this.variables == null) {
+        return ''
+      }
+      return SqlUtil.generateBindedSQL(this.scriptData.sql, this.variables)
     }
   },
   props: {
@@ -40,13 +58,13 @@ export default defineComponent({
       requried: true
     },
     script: {
-      type: Object as PropType<ScriptSet>,
+      type: Object as PropType<ScriptData>,
       requried: true
     }
   },
   methods: {
-    generateBindedSQL (sql: string, variables: VariableData[]) {
-      return SqlUtil.generateBindedSQL(sql, variables)
+    copyToClipboard () {
+      Clipboard.copyToClipboard(this.renderedSql)
     }
   }
 })
@@ -55,5 +73,11 @@ export default defineComponent({
 <style>
   .el-card pre {
     margin: 0px 0px 10px 0px;
+  }
+
+  .show-script-icon {
+    width: 24px;
+    vertical-align: middle;
+    padding: 0px 8px;
   }
 </style>
