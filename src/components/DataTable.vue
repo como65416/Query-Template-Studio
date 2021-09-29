@@ -71,7 +71,7 @@ export default defineComponent({
           cellStyle: (params: CellClassParams) => {
             const style: {[key : string]: string} = { borderRight: '1px solid #ddd' }
             if (params.value === null) {
-              style.backgroundColor = '#dadee6'
+              style.backgroundColor = '#eaeee6'
             }
             return style
           }
