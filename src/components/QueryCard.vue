@@ -80,12 +80,12 @@ export default defineComponent({
     vertical-align: middle;
     padding: 0px 8px;
   }
-  
+
   .reandered-sql-preview {
-      white-space: pre-wrap;       /* Since CSS 2.1 */
-      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-      white-space: -pre-wrap;      /* Opera 4-6 */
-      white-space: -o-pre-wrap;    /* Opera 7 */
-      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
   }
 </style>
