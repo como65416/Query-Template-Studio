@@ -4,10 +4,10 @@
     <el-popover
       placement="bottom"
       title="SQL"
-      :width="400"
+      :width="600"
       trigger="hover"
     >
-      <pre>{{ renderedSql }}</pre>
+      <pre class="reandered-sql-preview">{{ renderedSql }}</pre>
       <template #reference>
         <img src="static://statics/icons/db_mysql_server.svg" class="show-script-icon" @click="copyToClipboard"/>
       </template>
@@ -79,5 +79,13 @@ export default defineComponent({
     width: 24px;
     vertical-align: middle;
     padding: 0px 8px;
+  }
+  
+  .reandered-sql-preview {
+      white-space: pre-wrap;       /* Since CSS 2.1 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
   }
 </style>
