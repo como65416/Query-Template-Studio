@@ -1,125 +1,130 @@
 <template>
-  <!-- Main Dialog -->
-  <el-dialog title="Edit Script Set" v-model="dialogVisible">
-    <div class='main-dialog'>
-      <div class="select-set-card">
-        Script Set :
-        <el-select v-model="selectedScriptSetIndex" size="medium" placeholder="-">
-          <el-option
-            v-for="(scriptSet, key) in editingScriptSets"
-            :label="scriptSet.name"
-            :value="key"
-            :id="scriptSet.id"
-            :key="scriptSet.id"
-          ></el-option>
-        </el-select>
-        <el-button
-          class="set-btn"
-          size="mini"
-          type="success"
-          icon="el-icon-plus"
-          @click="openAddScriptSetDialog"
-          circle>
-        </el-button>
-        <el-button
-          class="set-btn"
-          size="mini"
-          type="danger"
-          icon="el-icon-minus"
-          @click="removeScriptSet"
-          circle>
-        </el-button>
+  <div>
+    <!-- Main Dialog -->
+    <el-dialog title="Edit Script Set" v-model="dialogVisible">
+      <div class='main-dialog'>
+        <div class="select-set-card">
+          Script Set :
+          <el-select v-model="selectedScriptSetIndex" size="medium" placeholder="-">
+            <el-option
+              v-for="(scriptSet, key) in editingScriptSets"
+              :label="scriptSet.name"
+              :value="key"
+              :id="scriptSet.id"
+              :key="scriptSet.id"
+            ></el-option>
+          </el-select>
+          <el-button
+            class="set-btn"
+            size="mini"
+            type="success"
+            icon="el-icon-plus"
+            @click="openAddScriptSetDialog"
+            circle>
+          </el-button>
+          <el-button
+            class="set-btn"
+            size="mini"
+            type="danger"
+            icon="el-icon-minus"
+            @click="removeScriptSet"
+            circle>
+          </el-button>
+        </div>
+        <div class="variables-card">
+          Variable :
+          <el-tag size="small"
+            v-for="variable in editingScriptSets[selectedScriptSetIndex].variables"
+            :key="variable.keyword"
+            class="variable-tag"
+            @close="deleteVariable(variable)"
+            closable>
+            {{ variable.name }} ({{ variable.keyword }})
+          </el-tag>
+          <el-button class="button-new-variable" size="mini" @click="openAddVariableDialog">+</el-button>
+        </div>
+        <el-tabs
+          type="border-card"
+          @tab-click="tabsClick"
+          @tab-remove="removeScript">
+          <el-tab-pane
+            v-for="script in editingScriptSets[selectedScriptSetIndex].scripts"
+            :label="script.name"
+            :name="script.name"
+            closable
+            :key="script.name">
+          </el-tab-pane>
+          <el-tab-pane>
+            <template #label>
+              <span><i class="el-icon-plus"></i></span>
+            </template>
+          </el-tab-pane>
+          <CodeTextArea
+            height="200px"
+            mode="ace/mode/sql"
+            v-if="selectedScriptSqlIndex >= 0"
+            v-model:content="editingScriptSets[selectedScriptSetIndex].scripts[selectedScriptSqlIndex].sql
+            "/>
+        </el-tabs>
       </div>
-      <div class="variables-card">
-        Variable :
-        <el-tag size="small"
-          v-for="variable in editingScriptSets[selectedScriptSetIndex].variables"
-          :key="variable.keyword"
-          class="variable-tag"
-          @close="deleteVariable(variable)"
-          closable>
-          {{ variable.name }} ({{ variable.keyword }})
-        </el-tag>
-        <el-button class="button-new-variable" size="mini" @click="openAddVariableDialog">+</el-button>
-      </div>
-      <el-tabs
-        type="border-card"
-        @tab-click="tabsClick"
-        @tab-remove="removeScript">
-        <el-tab-pane
-          v-for="script in editingScriptSets[selectedScriptSetIndex].scripts"
-          :label="script.name"
-          :name="script.name"
-          closable
-          :key="script.name">
-        </el-tab-pane>
-        <el-tab-pane>
-          <template #label>
-            <span><i class="el-icon-plus"></i></span>
-          </template>
-        </el-tab-pane>
-        <CodeTextArea
-          height="200px"
-          mode="ace/mode/sql"
-          v-if="selectedScriptSqlIndex >= 0"
-          v-model:content="editingScriptSets[selectedScriptSetIndex].scripts[selectedScriptSqlIndex].sql
-          "/>
-      </el-tabs>
-    </div>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="saveConfig">Save</el-button>
-        <el-button @click="dialogVisible = false">Cancel</el-button>
-      </span>
-    </template>
-  </el-dialog>
-  <!-- Add New Script Set Dialog -->
-  <el-dialog title="Add New Script Set" width="40%" v-model="addScriptSetVisible" append-to-body>
-    <el-input placeholder="Name" v-model="newScriptSetName">
-      <template #prepend>Name : </template>
-    </el-input>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="createNewScriptSet">Save</el-button>
-        <el-button @click="addScriptSetVisible = false">Cancel</el-button>
-      </span>
-    </template>
-  </el-dialog>
-  <!-- Add New Script Dialog -->
-  <el-dialog title="Add New Script" width="40%" v-model="addScriptVisible" append-to-body>
-    <el-input placeholder="Name" v-model="newScriptName">
-      <template #prepend>Name : </template>
-    </el-input>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="createNewScript">Save</el-button>
-        <el-button @click="addScriptVisible = false">Cancel</el-button>
-      </span>
-    </template>
-  </el-dialog>
-  <!-- Add New Variable Dialog -->
-  <el-dialog title="Add New Variable" width="40%" v-model="addVariableVisible" append-to-body>
-    <el-form label-width="80px">
-      <el-form-item label="Name">
-        <el-input v-model="newVariableName"></el-input>
-      </el-form-item>
-      <el-form-item label="Keyword">
-        <el-input v-model="newVariableKeyword"></el-input>
-      </el-form-item>
-      <el-form-item label="Type">
-        <el-select v-model="newVariableType">
-          <el-option label="Number" value="Number"></el-option>
-          <el-option label="String" value="String"></el-option>
-        </el-select>
-      </el-form-item>
-    </el-form>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="createNewVariable">Save</el-button>
-        <el-button @click="addVariableVisible = false">Cancel</el-button>
-      </span>
-    </template>
-  </el-dialog>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="saveConfig">Save</el-button>
+          <el-button @click="dialogVisible = false">Cancel</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- Add New Script Set Dialog -->
+    <el-dialog title="Add New Script Set" width="40%" v-model="addScriptSetVisible" append-to-body>
+      <el-input placeholder="Name" v-model="newScriptSetName">
+        <template #prepend>Name : </template>
+      </el-input>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="createNewScriptSet">Save</el-button>
+          <el-button @click="addScriptSetVisible = false">Cancel</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- Add New Script Dialog -->
+    <el-dialog title="Add New Script" width="40%" v-model="addScriptVisible" append-to-body>
+      <el-input placeholder="Name" v-model="newScriptName">
+        <template #prepend>Name : </template>
+      </el-input>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="createNewScript">Save</el-button>
+          <el-button @click="addScriptVisible = false">Cancel</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!-- Add New Variable Dialog -->
+    <el-dialog title="Add New Variable" width="40%" v-model="addVariableVisible" append-to-body>
+      <el-form label-width="80px">
+        <el-form-item label="Name">
+          <el-input v-model="newVariableName"></el-input>
+        </el-form-item>
+        <el-form-item label="Keyword">
+          <el-input v-model="newVariableKeyword"></el-input>
+        </el-form-item>
+        <el-form-item label="Type">
+          <el-select v-model="newVariableType">
+            <el-option label="Number" value="Number"></el-option>
+            <el-option label="String" value="String"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button type="primary" @click="createNewVariable">Save</el-button>
+          <el-button @click="addVariableVisible = false">Cancel</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script lang="ts">

@@ -25,7 +25,7 @@ class DataStorage {
     store.set(databaseConfigKey, config)
   }
 
-  static saveScriptSets (scriptSets: ScriptSet[]) {
+  static saveScriptSets (scriptSets: ScriptSet[]): void {
     const defaultSavePath = this.getDefaultSavePath()
     const content = JSON.stringify(scriptSets, null, 4)
     fs.writeFileSync(defaultSavePath, content)

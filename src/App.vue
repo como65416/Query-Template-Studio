@@ -18,8 +18,9 @@
     @onSettingClick="openSettingDialog"
     @onScriptEditorClick="openScriptEditorDialog"/>
   <SettingDialog
-    v-model:visible="settingDialogVisable"
-    v-model:databaseConfig="databaseConfig"/>
+    @onSettingUpdated="settingUpdated"
+    :databaseConfig="databaseConfig"
+    v-model:visible="settingDialogVisable"/>
   <EditorDialog
     @scriptSetsUpdated="onScriptSetsUpdated"
     v-model:visible="scriptEditorVisable"
@@ -28,6 +29,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
+import { SET_ENVIRONMENT } from '@/store/mutation-types'
 import { defineComponent } from 'vue'
 import { DataStorage } from '@/libs'
 import { Sidebar, SettingButton, SettingDialog, ScriptSetPanel, EditorDialog } from '@/components'
@@ -84,12 +86,18 @@ export default defineComponent({
       this.scriptSets = _.cloneDeep(newScriptSets)
       this.createdScriptSets = []
       DataStorage.saveScriptSets(newScriptSets)
+    },
+    settingUpdated (databaseConfig: DatabaseConfig) {
+      DataStorage.saveDatabaseConfig(databaseConfig)
+      this.databaseConfig = databaseConfig
+      this.$store.commit(SET_ENVIRONMENT, { databaseConfig })
     }
   },
   watch: {
-    databaseConfig () {
-      DataStorage.saveDatabaseConfig(this.databaseConfig)
-    }
+  },
+  created: function () {
+    const databaseConfig = DataStorage.getDatabaseConfig()
+    this.$store.commit(SET_ENVIRONMENT, { databaseConfig })
   }
 })
 </script>

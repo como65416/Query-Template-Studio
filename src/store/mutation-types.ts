@@ -1,0 +1,5 @@
+const SET_ENVIRONMENT = 'SET_ENVIRONMENT'
+
+export {
+  SET_ENVIRONMENT
+}

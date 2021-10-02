@@ -19,7 +19,7 @@
     </el-form>
     <template #footer>
       <span class="dialog-footer">
-        <el-button type="primary" @click="saveConfig">Save</el-button>
+        <el-button type="primary" @click="saveSetting">Save</el-button>
         <el-button @click="dialogVisible = false">Cancel</el-button>
       </span>
     </template>
@@ -37,6 +37,7 @@ declare interface BaseComponentData {
 
 export default defineComponent({
   name: 'SettingDialog',
+  emits: ['update:visible', 'onSettingUpdated'],
   data (): BaseComponentData {
     return {
       dialogVisible: this.visible,
@@ -63,8 +64,8 @@ export default defineComponent({
     }
   },
   methods: {
-    saveConfig () {
-      this.$emit('update:databaseConfig', this.dbConfig)
+    saveSetting () {
+      this.$emit('onSettingUpdated', this.dbConfig)
       this.dialogVisible = false
     }
   }

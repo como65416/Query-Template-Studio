@@ -24,11 +24,15 @@ import { ElMessage } from 'element-plus'
 import { SqlUtil } from '@/libs'
 import { defineComponent, PropType } from 'vue'
 import { VariableField, QueryCard } from '@/components'
-import { VariableData, ScriptSet, DatabaseConfig } from '@/types'
+import { ScriptSet, DatabaseConfig } from '@/types'
 
 declare interface BaseComponentData {
   isQuerying: boolean,
   scriptSetData?: ScriptSet
+}
+
+declare interface RowData {
+  [key: string]: number | string | null
 }
 
 export default defineComponent({
@@ -67,14 +71,7 @@ export default defineComponent({
       this.isQuerying = true
       let conn
       try {
-        conn = await mysql.createConnection({
-          host: this.databaseConfig.host,
-          user: this.databaseConfig.username,
-          password: this.databaseConfig.password,
-          database: this.databaseConfig.database,
-          port: this.databaseConfig.port,
-          dateStrings: true
-        })
+        conn = await this.createDBConn()
 
         for (const script of this.scriptSetData.scripts) {
           script.result.titles = []
@@ -85,10 +82,6 @@ export default defineComponent({
 
           const sql = SqlUtil.generateBindedSQL(script.sql, this.scriptSetData.variables)
           const [rows] = await conn.execute(sql)
-
-          interface RowData {
-            [key: string]: number | string | null
-          }
           const datas: RowData[] = Object.values(JSON.parse(JSON.stringify(rows)))
 
           if (datas.length > 0) {
@@ -105,8 +98,18 @@ export default defineComponent({
       }
       this.isQuerying = false
     },
-    generateBindedSQL (sql: string, variables: VariableData[]) {
-      return SqlUtil.generateBindedSQL(sql, variables)
+    async createDBConn () {
+      const databaseConfig = this.$store.state.environment.databaseConfig
+      const conn = await mysql.createConnection({
+        host: databaseConfig.host,
+        user: databaseConfig.username,
+        password: databaseConfig.password,
+        database: databaseConfig.database,
+        port: databaseConfig.port,
+        dateStrings: true
+      })
+
+      return conn
     }
   }
 })
