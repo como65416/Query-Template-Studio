@@ -108,8 +108,8 @@
       </el-form-item>
       <el-form-item label="Type">
         <el-select v-model="newVariableType">
-          <el-option label="Number" value="number"></el-option>
-          <el-option label="String" value="string"></el-option>
+          <el-option label="Number" value="Number"></el-option>
+          <el-option label="String" value="String"></el-option>
         </el-select>
       </el-form-item>
     </el-form>

@@ -7,10 +7,13 @@ class SqlUtil {
         continue
       }
 
-      if (v.type === 'Number') {
-        sql = sql.replace(v.keyword, String(v.value))
-      } else if (v.type === 'String') {
-        sql = sql.replace(v.keyword, JSON.stringify(v.value))
+      switch (v.type.toLowerCase()) {
+        case 'number':
+          sql = sql.replace(v.keyword, String(v.value))
+          break
+        case 'string':
+          sql = sql.replace(v.keyword, JSON.stringify(v.value))
+          break
       }
     }
 
