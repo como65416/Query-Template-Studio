@@ -2,19 +2,19 @@
   <el-dialog title="Setting" v-model="dialogVisible">
     <el-form label-width="80px">
       <el-form-item label="Host">
-        <el-input v-model="dbConfig.host" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.host"></el-input>
       </el-form-item>
       <el-form-item label="Username">
-        <el-input v-model="dbConfig.username" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.username"></el-input>
       </el-form-item>
       <el-form-item label="Password">
-        <el-input v-model="dbConfig.password" type="password" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.password" type="password"></el-input>
       </el-form-item>
       <el-form-item label="Port">
-        <el-input v-model="dbConfig.port" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.port"></el-input>
       </el-form-item>
       <el-form-item label="Database">
-        <el-input v-model="dbConfig.database" autocomplete="off"></el-input>
+        <el-input v-model="dbConfig.database"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
