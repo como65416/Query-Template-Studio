@@ -1,3 +1,4 @@
+import { DataType } from '@/enums'
 import { VariableData } from '@/types'
 
 class SqlUtil {
@@ -8,10 +9,10 @@ class SqlUtil {
       }
 
       switch (v.type.toLowerCase()) {
-        case 'number':
+        case DataType.Number:
           sql = sql.replace(v.keyword, String(v.value))
           break
-        case 'string':
+        case DataType.String:
           sql = sql.replace(v.keyword, JSON.stringify(v.value))
           break
       }

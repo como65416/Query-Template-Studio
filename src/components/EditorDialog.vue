@@ -112,8 +112,11 @@
         </el-form-item>
         <el-form-item label="Type">
           <el-select v-model="newVariableType">
-            <el-option label="Number" value="Number"></el-option>
-            <el-option label="String" value="String"></el-option>
+            <el-option v-for="option in typeOptions"
+              :label="option.label"
+              :value="option.type"
+              v-bind:key="option.label">
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -133,6 +136,12 @@ import { uuid } from 'uuidv4'
 import { PropType, defineComponent } from 'vue'
 import { CodeTextArea } from '@/components'
 import { ScriptData, ScriptSet, VariableData } from '@/types'
+import { DataType } from '@/enums'
+
+declare interface TypeOption {
+  label: string,
+  type: DataType,
+}
 
 declare interface BaseComponentData {
   editingScriptSets: ScriptSet[],
@@ -148,7 +157,9 @@ declare interface BaseComponentData {
   newScriptSetName: string,
   newVariableName: string,
   newVariableKeyword: string,
-  newVariableType: 'number' | 'string'
+  newVariableType: DataType,
+  // UI Data
+  typeOptions: TypeOption[],
 }
 
 export default defineComponent({
@@ -158,15 +169,28 @@ export default defineComponent({
       editingScriptSets: this.scriptSets,
       selectedScriptSetIndex: 0,
       selectedScriptSqlIndex: 0,
+      // Dialog Status
       dialogVisible: false,
       addScriptVisible: false,
       addScriptSetVisible: false,
       addVariableVisible: false,
+      // Input data
       newScriptName: '',
       newScriptSetName: '',
       newVariableName: '',
       newVariableKeyword: '',
-      newVariableType: 'string'
+      newVariableType: DataType.String,
+      // UI Data
+      typeOptions: [
+        {
+          label: 'String',
+          type: DataType.String
+        },
+        {
+          label: 'Number',
+          type: DataType.Number
+        }
+      ]
     }
   },
   components: {
