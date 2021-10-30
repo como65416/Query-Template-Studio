@@ -132,6 +132,7 @@
 
 <script lang="ts">
 import _ from 'lodash'
+import { ElTabPane } from 'element-plus'
 import { uuid } from 'uuidv4'
 import { PropType, defineComponent } from 'vue'
 import { CodeTextArea } from '@/components'
@@ -249,11 +250,11 @@ export default defineComponent({
 
       this.selectedScriptSqlIndex = tab.index
     },
-    deleteVariable (t: any) {
+    deleteVariable (targetVar: VariableData) {
       if (confirm('Are you sure you want to delete this varaible?')) {
         const index = this.editingScriptSets[this.selectedScriptSetIndex]
           .variables
-          .findIndex(v => v.name === t.name && v.keyword === t.keyword)
+          .findIndex(v => v.name === targetVar.name && v.keyword === targetVar.keyword)
         if (index >= 0) {
           this.editingScriptSets[this.selectedScriptSetIndex].variables.splice(index, 1)
         }
